@@ -34,7 +34,7 @@ build/
 out/
 .next/
 .nuxt/
-
+public/uploads/*
 # Testing & Coverage (Hasil uji coba kode)
 coverage/
 .nyc_output/
