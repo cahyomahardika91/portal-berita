@@ -1,0 +1,18 @@
+<div class="head"><h1>Tema</h1></div>
+<div class="notice error">Tema berisi template EJS yang dijalankan di server. Pasang hanya tema dari sumber tepercaya.</div>
+<form method="post" enctype="multipart/form-data" action="/admin/themes/upload?_csrf=<%= csrfToken %>" class="box">
+  <h2>Pasang tema (.zip)</h2>
+  <input type="file" name="file" accept=".zip" required> <button class="btn">Pasang</button>
+  <small>ZIP harus berisi <code>theme.json</code> dan folder <code>views/</code> dan/atau <code>assets/</code> (stylesheet utama: <code>assets/style.css</code>).</small>
+</form>
+<table class="list"><thead><tr><th>Tema</th><th>Deskripsi</th><th></th></tr></thead>
+  <tr><td><b>Default</b><br><small>Bawaan</small></td><td>Tema bawaan portal berita.</td>
+    <td class="acts"><% if (active === 'default') { %><span class="badge published">Aktif</span><% } else { %>
+      <form method="post" action="/admin/themes/default/activate"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn">Aktifkan</button></form><% } %></td></tr>
+  <% themes.forEach(t => { %>
+  <tr><td><b><%= t.name %></b><br><small>v<%= t.version %> <%= t.author ? '· ' + t.author : '' %></small></td><td><%= t.description %></td>
+    <td class="acts"><% if (active === t.slug) { %><span class="badge published">Aktif</span><% } else { %>
+      <form method="post" action="/admin/themes/<%= t.slug %>/activate"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn">Aktifkan</button></form>
+      <form method="post" action="/admin/themes/<%= t.slug %>/delete" data-confirm="Hapus tema ini?"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Hapus</button></form><% } %></td></tr>
+  <% }) %>
+</table>

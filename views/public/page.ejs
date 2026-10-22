@@ -1,0 +1,9 @@
+﻿<div class="layout">
+  <article class="content single">
+    <% if (post.status !== 'published') { %><div class="notice error">Pratinjau — status: <%= post.status %></div><% } %>
+    <h1><%= post.title %></h1>
+    <% if (post.featured_image) { %><figure class="featured"><img src="/uploads/<%= post.featured_image %>" alt="<%= post.title %>"></figure><% } %>
+    <div class="entry"><%- post.content %></div>
+  </article>
+  <%- include('public/_sidebar') %>
+</div>

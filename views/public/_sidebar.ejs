@@ -1,0 +1,20 @@
+﻿<aside class="sidebar">
+  <section class="widget">
+    <h3 class="widget-title">Terpopuler</h3>
+    <ol class="popular">
+      <% sidePopular.forEach(p => { %><li><a href="/<%= p.slug %>"><%= p.title %></a><small><%= p.views %> dibaca</small></li><% }) %>
+    </ol>
+  </section>
+  <section class="widget">
+    <h3 class="widget-title">Kategori</h3>
+    <ul class="cat-list">
+      <% sideCategories.forEach(c => { %><li><a href="/category/<%= c.slug %>"><%= c.name %></a> <span>(<%= c.cnt %>)</span></li><% }) %>
+    </ul>
+  </section>
+  <% if (sideTags.length) { %>
+  <section class="widget">
+    <h3 class="widget-title">Tag</h3>
+    <div class="tags"><% sideTags.forEach(t => { %><a href="/tag/<%= t.slug %>">#<%= t.name %></a><% }) %></div>
+  </section>
+  <% } %>
+</aside>

@@ -1,0 +1,13 @@
+<h1><%= title %></h1>
+<form method="post" action="/admin/users/save" class="box narrow">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="hidden" name="id" value="<%= u.id %>">
+  <label>Username<input name="username" required value="<%= u.username %>"></label>
+  <label>Email<input type="email" name="email" required value="<%= u.email %>"></label>
+  <label>Nama tampilan<input name="display_name" required value="<%= u.display_name %>"></label>
+  <label>Peran<select name="role">
+    <% [['admin','Administrator'],['editor','Editor'],['author','Penulis'],['contributor','Kontributor']].forEach(([v, l]) => { %><option value="<%= v %>" <%= u.role === v ? 'selected' : '' %>><%= l %></option><% }) %></select></label>
+  <label>Bio<textarea name="bio" rows="3"><%= u.bio || '' %></textarea></label>
+  <label>Password <%= u.id ? '(kosongkan jika tidak diubah)' : '' %><input type="password" name="password" minlength="8" <%= u.id ? '' : 'required' %> autocomplete="new-password"></label>
+  <button class="btn">Simpan</button> <a href="/admin/users">Batal</a>
+</form>

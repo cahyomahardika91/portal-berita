@@ -1,0 +1,36 @@
+﻿<% if (featured.length) { %>
+<section class="hero">
+  <% const [first, ...rest] = featured; %>
+  <article class="hero-main">
+    <a href="/<%= first.slug %>">
+      <% if (first.featured_image) { %><img src="/uploads/<%= first.featured_image %>" alt="<%= first.title %>"><% } else { %><span class="noimg"></span><% } %>
+      <div class="hero-caption">
+        <% if (first.category) { %><span class="cat"><%= first.category.name %></span><% } %>
+        <h2><%= first.title %></h2>
+      </div>
+    </a>
+  </article>
+  <div class="hero-side">
+    <% rest.forEach(p => { %><%- include('public/_card', { p, size: 'small' }) %><% }) %>
+  </div>
+</section>
+<% } %>
+
+<div class="layout">
+  <div class="content">
+    <h2 class="section-title">Berita Terbaru</h2>
+    <div class="list">
+      <% latest.forEach(p => { %><%- include('public/_card', { p, size: 'row' }) %><% }) %>
+      <% if (!latest.length && !featured.length) { %><p>Belum ada berita.</p><% } %>
+    </div>
+    <%- include('public/_pager') %>
+
+    <% sections.forEach(s => { if (s.posts.length) { %>
+    <h2 class="section-title"><a href="/category/<%= s.category.slug %>"><%= s.category.name %></a></h2>
+    <div class="grid">
+      <% s.posts.forEach(p => { %><%- include('public/_card', { p, size: 'grid' }) %><% }) %>
+    </div>
+    <% } }) %>
+  </div>
+  <%- include('public/_sidebar') %>
+</div>

@@ -1,0 +1,7 @@
+{
+  "name": "Reading Time",
+  "version": "1.0.0",
+  "author": "CMS",
+  "description": "Menampilkan estimasi waktu baca di awal artikel dan contoh halaman admin/rute publik.",
+  "main": "index.js"
+}

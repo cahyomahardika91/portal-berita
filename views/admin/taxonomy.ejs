@@ -1,0 +1,20 @@
+<div class="head"><h1><%= label %></h1></div>
+<div class="cols tax">
+  <div class="box"><h2><%= edit ? 'Edit' : 'Tambah' %> <%= label %></h2>
+    <form method="post" action="<%= base %>/save">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="id" value="<%= edit ? edit.id : 0 %>">
+      <label>Nama<input name="name" required value="<%= edit ? edit.name : '' %>"></label>
+      <label>Slug<input name="slug" value="<%= edit ? edit.slug : '' %>"></label>
+      <% if (hasDesc) { %><label>Deskripsi<textarea name="description" rows="3"><%= edit ? edit.description : '' %></textarea></label><% } %>
+      <button class="btn">Simpan</button> <% if (edit) { %><a href="<%= base %>">Batal</a><% } %>
+    </form>
+  </div>
+  <div>
+    <table class="list"><thead><tr><th>Nama</th><th>Slug</th><th>Jumlah</th><th></th></tr></thead>
+      <% rows.forEach(r => { %><tr><td><b><%= r.name %></b></td><td><%= r.slug %></td><td><%= r.cnt %></td>
+        <td class="acts"><a href="<%= base %>?edit=<%= r.id %>">Edit</a>
+          <form method="post" action="<%= base %>/<%= r.id %>/delete" data-confirm="Hapus <%= r.name %>?"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Hapus</button></form></td></tr><% }) %>
+    </table>
+  </div>
+</div>

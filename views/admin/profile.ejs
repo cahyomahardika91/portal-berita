@@ -1,0 +1,9 @@
+<h1>Profil Saya</h1>
+<form method="post" action="/admin/profile" class="box narrow">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <label>Nama tampilan<input name="display_name" required value="<%= u.display_name %>"></label>
+  <label>Email<input type="email" name="email" required value="<%= u.email %>"></label>
+  <label>Bio<textarea name="bio" rows="3"><%= u.bio || '' %></textarea></label>
+  <label>Password baru (kosongkan jika tidak diubah)<input type="password" name="password" minlength="8" autocomplete="new-password"></label>
+  <button class="btn">Simpan</button>
+</form>

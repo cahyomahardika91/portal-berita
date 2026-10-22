@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= title %> ‹ Admin – <%= settings.site_title %></title>
+<link rel="stylesheet" href="/css/admin.css">
+<meta name="csrf" content="<%= csrfToken %>">
+</head>
+<body>
+<aside class="sb">
+  <a class="sb-brand" href="/admin"><%= settings.site_title %></a>
+  <% const is = (p) => adminPath === p || adminPath.startsWith(p + '/'); %>
+  <nav>
+    <a href="/admin" class="<%= adminPath === '/' ? 'on' : '' %>">Dashboard</a>
+    <a href="/admin/posts" class="<%= is('/posts') ? 'on' : '' %>">Berita</a>
+    <a href="/admin/posts/new" class="sub">+ Tulis Baru</a>
+    <% if (can('editor')) { %>
+    <a href="/admin/categories" class="<%= is('/categories') ? 'on' : '' %>">Kategori</a>
+    <a href="/admin/tags" class="<%= is('/tags') ? 'on' : '' %>">Tag</a>
+    <a href="/admin/pages" class="<%= is('/pages') ? 'on' : '' %>">Halaman</a>
+    <a href="/admin/comments" class="<%= is('/comments') ? 'on' : '' %>">Komentar</a>
+    <% } %>
+    <a href="/admin/media" class="<%= is('/media') ? 'on' : '' %>">Media</a>
+    <% if (can('admin')) { %>
+    <a href="/admin/menus" class="<%= is('/menus') ? 'on' : '' %>">Menu</a>
+    <a href="/admin/themes" class="<%= is('/themes') ? 'on' : '' %>">Tema</a>
+    <a href="/admin/plugins" class="<%= is('/plugins') ? 'on' : '' %>">Plugin</a>
+    <% pluginAdminLinks.forEach(l => { %><a href="<%= l.url %>" class="sub"><%= l.label %></a><% }) %>
+    <a href="/admin/users" class="<%= is('/users') ? 'on' : '' %>">Pengguna</a>
+    <a href="/admin/settings" class="<%= is('/settings') ? 'on' : '' %>">Pengaturan</a>
+    <% } %>
+    <a href="/admin/profile" class="<%= is('/profile') ? 'on' : '' %>">Profil</a>
+  </nav>
+</aside>
+<div class="main">
+  <header class="top">
+    <a href="/" target="_blank">Lihat Situs ↗</a>
+    <span><%= currentUser.display_name %> (<%= currentUser.role %>)</span>
+    <form method="post" action="/admin/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link">Keluar</button></form>
+  </header>
+  <div class="body">
+    <% if (flash) { %><div class="notice <%= flash.type %>"><%= flash.msg %></div><% } %>
+    <%- body %>
+  </div>
+</div>
+<script src="/js/admin.js"></script>
+</body>
+</html>

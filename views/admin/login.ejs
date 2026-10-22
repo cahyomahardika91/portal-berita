@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login – <%= settings.site_title %></title><link rel="stylesheet" href="/css/admin.css"></head>
+<body class="login-body">
+<form class="login" method="post" action="/admin/login">
+  <h1><%= settings.site_title %></h1>
+  <% if (error) { %><div class="notice error"><%= error %></div><% } %>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <label>Username atau Email<input name="username" required autofocus></label>
+  <label>Password<input type="password" name="password" required></label>
+  <button class="btn">Masuk</button>
+  <p><a href="/">&larr; Kembali ke situs</a><% if (settings.allow_registration === '1') { %> &middot; <a href="/register">Daftar akun</a><% } %></p>
+</form>
+</body></html>

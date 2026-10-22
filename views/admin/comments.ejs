@@ -1,0 +1,16 @@
+<div class="head"><h1>Komentar</h1></div>
+<ul class="tabs"><% ['pending','approved','spam','trash'].forEach(s => { const t = tabs.find(x => x.status === s); %>
+  <li><a class="<%= status === s ? 'on' : '' %>" href="/admin/comments?status=<%= s %>"><%= s %> (<%= t ? t.n : 0 %>)</a></li><% }) %></ul>
+<table class="list">
+  <% rows.forEach(c => { %>
+  <tr><td><b><%= c.author_name %></b><br><small><%= c.author_email %><br><%= c.ip %></small></td>
+    <td><%= c.content %><div class="acts">
+      <% [['approved','Setujui'],['pending','Tunda'],['spam','Spam'],['trash','Sampah']].forEach(([a, l]) => { if (a !== c.status) { %>
+        <form method="post" action="/admin/comments/<%= c.id %>/<%= a %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link"><%= l %></button></form><% } }) %>
+      <form method="post" action="/admin/comments/<%= c.id %>/delete" data-confirm="Hapus permanen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Hapus</button></form>
+    </div></td>
+    <td><a href="/<%= c.post_slug %>" target="_blank"><%= c.post_title %></a><br><small><%= fmtDateTime(c.created_at) %></small></td></tr>
+  <% }) %>
+  <% if (!rows.length) { %><tr><td>Tidak ada komentar.</td></tr><% } %>
+</table>
+<%- include('_pager') %>

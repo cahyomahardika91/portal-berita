@@ -1,0 +1,19 @@
+<div class="head"><h1>Media</h1></div>
+<form method="post" enctype="multipart/form-data" action="/admin/media/upload?_csrf=<%= csrfToken %>" class="box">
+  <input type="file" name="files" accept="image/*" multiple required> <button class="btn">Unggah</button>
+  <small>JPG, PNG, GIF, WEBP – maks. 5MB</small>
+</form>
+<div class="media-grid">
+  <% rows.forEach(m => { %>
+  <div class="media-item">
+    <img src="/uploads/<%= m.filename %>" alt="<%= m.alt || '' %>" loading="lazy">
+    <small><%= m.original_name %></small>
+    <input readonly value="/uploads/<%= m.filename %>" class="sel">
+    <form method="post" action="/admin/media/<%= m.id %>/alt"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input name="alt" placeholder="Teks alternatif" value="<%= m.alt || '' %>"><button class="link">Simpan</button></form>
+    <form method="post" action="/admin/media/<%= m.id %>/delete" data-confirm="Hapus file ini?"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Hapus</button></form>
+  </div>
+  <% }) %>
+  <% if (!rows.length) { %><p>Belum ada media.</p><% } %>
+</div>
+<%- include('_pager') %>

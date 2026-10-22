@@ -1,0 +1,23 @@
+<h1>Dashboard</h1>
+<div class="stats">
+  <div><b><%= stats.published %></b>Berita terbit</div>
+  <div><b><%= stats.drafts %></b>Draft / Menunggu</div>
+  <div><b><%= stats.pages %></b>Halaman</div>
+  <div><b><%= stats.comments %></b>Komentar menunggu</div>
+  <div><b><%= stats.views %></b>Total dibaca</div>
+</div>
+<div class="cols">
+  <div class="box"><h2>Berita Terbaru</h2>
+    <table><% recent.forEach(p => { %>
+      <tr><td><a href="/admin/posts/<%= p.id %>/edit"><%= p.title %></a></td><td><span class="badge <%= p.status %>"><%= p.status %></span></td><td><%= fmtDate(p.created_at) %></td></tr>
+    <% }) %></table>
+    <p><a class="btn" href="/admin/posts/new">Tulis berita</a></p>
+  </div>
+  <div class="box"><h2>Terpopuler</h2>
+    <table><% topPosts.forEach(p => { %><tr><td><a href="/<%= p.slug %>" target="_blank"><%= p.title %></a></td><td><%= p.views %></td></tr><% }) %></table>
+    <% if (can('editor')) { %>
+    <h2>Komentar Terbaru</h2>
+    <% comments.forEach(c => { %><p><b><%= c.author_name %></b> pada <i><%= c.post_title %></i><br><%= c.content.slice(0, 100) %></p><% }) %>
+    <% } %>
+  </div>
+</div>

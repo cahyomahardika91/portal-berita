@@ -1,0 +1,7 @@
+﻿<% if (pages > 1) { %>
+<nav class="pager">
+  <% if (page > 1) { %><a href="<%= pagerBase %>page=<%= page - 1 %>">&laquo; Sebelumnya</a><% } %>
+  <span>Halaman <%= page %> dari <%= pages %></span>
+  <% if (page < pages) { %><a href="<%= pagerBase %>page=<%= page + 1 %>">Berikutnya &raquo;</a><% } %>
+</nav>
+<% } %>

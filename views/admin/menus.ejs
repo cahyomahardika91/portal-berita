@@ -1,0 +1,13 @@
+<h1>Menu</h1>
+<form method="post" action="/admin/menus" class="box">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% [['primary', 'Menu Utama (header)', primary], ['footer', 'Menu Footer', footer]].forEach(([loc, name, items]) => { %>
+  <h2><%= name %></h2>
+  <div class="menu-rows" data-loc="<%= loc %>">
+    <% items.forEach(i => { %><div class="menu-row"><input name="<%= loc %>_label" value="<%= i.label %>" placeholder="Label"><input name="<%= loc %>_url" value="<%= i.url %>" placeholder="/category/slug atau https://..."><button type="button" class="link danger rm">✕</button></div><% }) %>
+  </div>
+  <button type="button" class="btn alt add-row" data-loc="<%= loc %>">+ Tambah item</button>
+  <% }) %>
+  <p><button class="btn">Simpan Menu</button></p>
+  <small>Urutan sesuai daftar. URL harus diawali / atau http(s)://</small>
+</form>

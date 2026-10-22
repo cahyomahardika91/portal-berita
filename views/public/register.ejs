@@ -1,0 +1,17 @@
+﻿<div class="layout">
+  <div class="content">
+    <h1 class="section-title">Daftar Akun</h1>
+    <% if (typeof error !== 'undefined' && error) { %><div class="notice error"><%= error %></div><% } %>
+    <form method="post" action="/register" class="comment-form" style="max-width:460px">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+      <input name="display_name" placeholder="Nama lengkap *" required maxlength="100" value="<%= form.display_name %>">
+      <input name="username" placeholder="Username * (mis. dika.frontier)" required maxlength="40" value="<%= form.username %>">
+      <input type="email" name="email" placeholder="Email *" required maxlength="150" value="<%= form.email %>">
+      <input type="password" name="password" placeholder="Password * (min. 8 karakter)" required minlength="8" autocomplete="new-password">
+      <button class="btn">Daftar</button>
+      <small>Sudah punya akun? <a href="/admin/login">Masuk</a></small>
+    </form>
+  </div>
+  <%- include('public/_sidebar') %>
+</div>

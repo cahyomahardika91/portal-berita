@@ -1,0 +1,18 @@
+<div class="head"><h1>Plugin</h1></div>
+<div class="notice error">Plugin adalah kode JavaScript yang berjalan penuh di server (akses database dan file). Pasang hanya plugin dari sumber tepercaya.</div>
+<form method="post" enctype="multipart/form-data" action="/admin/plugins/upload?_csrf=<%= csrfToken %>" class="box">
+  <h2>Pasang plugin (.zip)</h2>
+  <input type="file" name="file" accept=".zip" required> <button class="btn">Pasang</button>
+  <small>ZIP harus berisi <code>plugin.json</code> dan <code>index.js</code>.</small>
+</form>
+<table class="list"><thead><tr><th>Plugin</th><th>Deskripsi</th><th></th></tr></thead>
+  <% plugins.forEach(p => { const on = active.includes(p.slug); %>
+  <tr><td><b><%= p.name %></b><br><small>v<%= p.version %> <%= p.author ? '· ' + p.author : '' %></small>
+    <% if (errors[p.slug]) { %><br><small class="danger">Error: <%= errors[p.slug] %></small><% } %></td>
+    <td><%= p.description %></td>
+    <td class="acts">
+      <form method="post" action="/admin/plugins/<%= p.slug %>/<%= on ? 'deactivate' : 'activate' %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn <%= on ? 'alt' : '' %>"><%= on ? 'Nonaktifkan' : 'Aktifkan' %></button></form>
+      <form method="post" action="/admin/plugins/<%= p.slug %>/delete" data-confirm="Hapus plugin ini?"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Hapus</button></form></td></tr>
+  <% }) %>
+  <% if (!plugins.length) { %><tr><td colspan="3">Belum ada plugin.</td></tr><% } %>
+</table>

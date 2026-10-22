@@ -1,0 +1,6 @@
+<div class="head"><h1>Pengguna</h1><a class="btn" href="/admin/users/new">Tambah baru</a></div>
+<table class="list"><thead><tr><th>Username</th><th>Nama</th><th>Email</th><th>Peran</th><th>Berita</th><th></th></tr></thead>
+  <% rows.forEach(u => { %><tr><td><b><%= u.username %></b></td><td><%= u.display_name %></td><td><%= u.email %></td><td><%= u.role %></td><td><%= u.posts %></td>
+    <td class="acts"><a href="/admin/users/<%= u.id %>/edit">Edit</a>
+      <% if (u.id !== currentUser.id) { %><form method="post" action="/admin/users/<%= u.id %>/delete" data-confirm="Hapus pengguna? Kontennya dialihkan ke Anda."><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Hapus</button></form><% } %></td></tr><% }) %>
+</table>

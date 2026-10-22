@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<% const st = settings; const sd = seo || {}; const pageTitle = sd.title && sd.title !== st.site_title ? sd.title + ' - ' + st.site_title : st.site_title + (st.tagline ? ' - ' + st.tagline : ''); %>
+<title><%= pageTitle %></title>
+<meta name="description" content="<%= sd.description || st.site_description || st.tagline %>">
+<meta property="og:site_name" content="<%= st.site_title %>">
+<meta property="og:title" content="<%= sd.title || st.site_title %>">
+<meta property="og:description" content="<%= sd.description || st.site_description || st.tagline %>">
+<meta property="og:type" content="<%= sd.type || 'website' %>">
+<% if (sd.url) { %><link rel="canonical" href="<%= siteUrl + sd.url %>"><meta property="og:url" content="<%= siteUrl + sd.url %>"><% } %>
+<% if (sd.image) { %><meta property="og:image" content="<%= siteUrl + sd.image %>"><meta name="twitter:card" content="summary_large_image"><% } %>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/feed">
+<link rel="stylesheet" href="/css/site.css">
+<% if (themeCss) { %><link rel="stylesheet" href="<%= themeCss %>"><% } %>
+<%- hook('head', { settings, seo }) %>
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <span><%= new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+  <span class="social">
+    <% ['facebook','twitter','instagram','youtube'].forEach(n => { if (st[n]) { %><a href="<%= st[n] %>" target="_blank" rel="noopener"><%= n %></a><% } }) %>
+    <a href="/feed">RSS</a>
+    <% if (currentUser) { %><a href="/admin">Dashboard</a><% } else { %><a href="/admin/login">Masuk</a><% if (settings.allow_registration === '1') { %><a href="/register">Daftar</a><% } } %>
+  </span>
+</div></div>
+<header class="site-header"><div class="wrap head-inner">
+  <a class="brand" href="/">
+    <% if (st.logo) { %><img src="/uploads/<%= st.logo %>" alt="<%= st.site_title %>"><% } else { %><strong><%= st.site_title %></strong><% } %>
+  </a>
+  <form class="search" action="/search" method="get"><input type="search" name="q" placeholder="Cari berita..." value="<%= typeof query !== 'undefined' && query.q ? query.q : '' %>"><button>Cari</button></form>
+</div>
+<nav class="main-nav"><div class="wrap">
+  <button class="nav-toggle" type="button">☰ Menu</button>
+  <ul>
+    <% menus.primary.forEach(m => { %><li><a href="<%= m.url %>" class="<%= currentPath === m.url ? 'active' : '' %>"><%= m.label %></a></li><% }) %>
+  </ul>
+</div></nav>
+</header>
+<main class="wrap">
+  <% if (flash) { %><div class="notice <%= flash.type %>"><%= flash.msg %></div><% } %>
+  <%- body %>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <ul class="footer-menu"><% menus.footer.forEach(m => { %><li><a href="<%= m.url %>"><%= m.label %></a></li><% }) %></ul>
+  <p>&copy; <%= new Date().getFullYear() %> <%= st.site_title %>. <%= st.footer_text %></p>
+</div></footer>
+<script src="/js/site.js"></script>
+<%- hook('body_end', { settings, seo }) %>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
+<form method="post" action="<%= base %>/save" id="post-form" class="editor">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="hidden" name="id" value="<%= post.id %>">
+  <div class="head"><h1><%= title %></h1>
+    <% if (post.id) { %><a class="btn alt" target="_blank" href="/<%= post.slug %>?preview=1">Pratinjau</a><% } %></div>
+  <div class="edit-grid">
+    <div>
+      <input class="title-input" name="title" value="<%= post.title %>" placeholder="Judul" required maxlength="255">
+      <label>Permalink<div class="slugrow"><span><%= siteUrl %>/</span><input name="slug" value="<%= post.slug %>" placeholder="otomatis dari judul"></div></label>
+      <div id="editor"><%- post.content %></div>
+      <textarea name="content" id="content" hidden></textarea>
+      <label>Ringkasan (excerpt)<textarea name="excerpt" rows="3" maxlength="500"><%= post.excerpt %></textarea></label>
+      <fieldset><legend>SEO</legend>
+        <label>Meta title<input name="meta_title" maxlength="255" value="<%= post.meta_title %>"></label>
+        <label>Meta description<textarea name="meta_description" rows="2" maxlength="320"><%= post.meta_description %></textarea></label>
+      </fieldset>
+    </div>
+    <div class="side">
+      <div class="box"><h3>Terbitkan</h3>
+        <label>Status<select name="status">
+          <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>Draft</option>
+          <option value="pending" <%= post.status === 'pending' ? 'selected' : '' %>>Menunggu review</option>
+          <% if (can('author')) { %><option value="published" <%= post.status === 'published' ? 'selected' : '' %>>Terbit</option><% } %>
+        </select></label>
+        <label>Tanggal terbit (isi masa depan untuk menjadwalkan)<input type="datetime-local" name="published_at" value="<%= toInputDate(post.published_at) %>"></label>
+        <% if (can('editor') && type === 'post') { %><label class="chk"><input type="checkbox" name="is_featured" value="1" <%= post.is_featured ? 'checked' : '' %>> Berita utama (headline)</label><% } %>
+        <% if (type === 'post') { %><label class="chk"><input type="checkbox" name="allow_comments" value="1" <%= post.allow_comments ? 'checked' : '' %>> Izinkan komentar</label><% } %>
+        <button class="btn block">Simpan</button>
+        <% if (post.id) { %><button class="link danger" type="submit" form="trash-form">Pindahkan ke sampah</button><% } %>
+      </div>
+      <% if (type === 'post') { %>
+      <div class="box"><h3>Kategori</h3>
+        <div class="checks"><% categories.forEach(c => { %><label class="chk"><input type="checkbox" name="categories" value="<%= c.id %>" <%= selCats.includes(c.id) ? 'checked' : '' %>> <%= c.name %></label><% }) %></div>
+        <% if (!categories.length) { %><small>Belum ada kategori.</small><% } %>
+      </div>
+      <div class="box"><h3>Tag</h3>
+        <input name="tags" value="<%= tags %>" list="taglist" placeholder="pisahkan dengan koma">
+        <datalist id="taglist"><% allTags.forEach(t => { %><option value="<%= t.name %>"><% }) %></datalist>
+      </div>
+      <% } %>
+      <div class="box"><h3>Gambar utama</h3>
+        <input type="hidden" name="featured_image" id="featured_image" value="<%= post.featured_image || '' %>">
+        <div id="featured-preview"><% if (post.featured_image) { %><img src="/uploads/<%= post.featured_image %>"><% } %></div>
+        <button type="button" class="btn alt" id="pick-featured">Pilih gambar</button>
+        <button type="button" class="link danger" id="clear-featured">Hapus</button>
+      </div>
+      <% if (revisions.length) { %>
+      <div class="box"><h3>Revisi</h3>
+        <% revisions.forEach(r => { %>
+        <div class="rev"><%= fmtDateTime(r.created_at) %> – <%= r.display_name %>
+          <button class="link" type="submit" form="rev-<%= r.id %>" data-confirm="Pulihkan revisi ini? Perubahan yang belum disimpan akan hilang.">Pulihkan</button></div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</form>
+<% if (post.id) { %>
+<form id="trash-form" method="post" action="<%= base %>/<%= post.id %>/trash"><input type="hidden" name="_csrf" value="<%= csrfToken %>"></form>
+<% revisions.forEach(r => { %><form id="rev-<%= r.id %>" method="post" action="<%= base %>/<%= post.id %>/revision/<%= r.id %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"></form><% }) %>
+<% } %>
+
+<div id="media-modal" class="modal" hidden>
+  <div class="modal-in">
+    <div class="head"><h2>Pustaka Media</h2><button type="button" class="link" id="modal-close">Tutup ✕</button></div>
+    <input type="file" id="modal-upload" accept="image/*" multiple>
+    <div id="modal-grid" class="media-grid"></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script src="/js/editor.js"></script>

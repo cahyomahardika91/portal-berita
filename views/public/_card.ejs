@@ -1,0 +1,12 @@
+﻿<%# card: p, size %>
+<article class="card <%= size || '' %>">
+  <a class="thumb" href="/<%= p.slug %>">
+    <% if (p.featured_image) { %><img src="/uploads/<%= p.featured_image %>" alt="<%= p.title %>" loading="lazy"><% } else { %><span class="noimg"></span><% } %>
+  </a>
+  <div class="card-body">
+    <% if (p.category) { %><a class="cat" href="/category/<%= p.category.slug %>"><%= p.category.name %></a><% } %>
+    <h3><a href="/<%= p.slug %>"><%= p.title %></a></h3>
+    <% if (size !== 'small' && p.excerpt) { %><p class="excerpt"><%= p.excerpt.length > 140 ? p.excerpt.slice(0, 140) + '…' : p.excerpt %></p><% } %>
+    <small class="meta"><%= p.author_name %> &middot; <%= fmtDate(p.published_at) %></small>
+  </div>
+</article>

@@ -1,0 +1,6 @@
+{
+  "name": "Dark",
+  "version": "1.0.0",
+  "author": "CMS",
+  "description": "Tema gelap contoh. Hanya menimpa stylesheet; tema lain dapat menimpa file di views/ (mis. views/public/home.ejs)."
+}

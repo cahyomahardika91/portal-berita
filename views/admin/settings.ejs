@@ -1,0 +1,21 @@
+<h1>Pengaturan</h1>
+<form method="post" action="/admin/settings" class="box narrow">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <label>Judul situs<input name="site_title" required value="<%= s.site_title %>"></label>
+  <label>Tagline<input name="tagline" value="<%= s.tagline %>"></label>
+  <label>Deskripsi situs (SEO)<textarea name="site_description" rows="2"><%= s.site_description %></textarea></label>
+  <label>Logo (nama file di Media, mis. 1699-ab12.png)<input name="logo" value="<%= s.logo %>"></label>
+  <label>Berita per halaman<input type="number" name="posts_per_page" min="1" max="50" value="<%= s.posts_per_page %>"></label>
+  <label class="chk"><input type="checkbox" name="comments_enabled" value="1" <%= s.comments_enabled === '1' ? 'checked' : '' %>> Aktifkan komentar</label>
+  <label class="chk"><input type="checkbox" name="comments_moderation" value="1" <%= s.comments_moderation === '1' ? 'checked' : '' %>> Moderasi komentar sebelum tampil</label>
+  <h3>Pendaftaran pengguna</h3>
+  <label class="chk"><input type="checkbox" name="allow_registration" value="1" <%= s.allow_registration === '1' ? 'checked' : '' %>> Siapa saja dapat mendaftar (halaman <a href="/register" target="_blank">/register</a>)</label>
+  <label>Peran default pengguna baru<select name="default_role">
+    <option value="contributor" <%= s.default_role !== 'author' ? 'selected' : '' %>>Kontributor (tulisan harus direview)</option>
+    <option value="author" <%= s.default_role === 'author' ? 'selected' : '' %>>Penulis (dapat menerbitkan sendiri)</option>
+  </select></label>
+  <label>Teks footer<input name="footer_text" value="<%= s.footer_text %>"></label>
+  <h3>Media sosial (URL)</h3>
+  <% ['facebook','twitter','instagram','youtube'].forEach(n => { %><label><%= n %><input name="<%= n %>" value="<%= s[n] %>"></label><% }) %>
+  <button class="btn">Simpan</button>
+</form>

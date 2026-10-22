@@ -1,0 +1,41 @@
+﻿<div class="layout">
+  <article class="content single">
+    <% if (post.status !== 'published') { %><div class="notice error">Pratinjau — status: <%= post.status %></div><% } %>
+    <div class="crumbs"><a href="/">Beranda</a>
+      <% if (post.category) { %> &rsaquo; <a href="/category/<%= post.category.slug %>"><%= post.category.name %></a><% } %></div>
+    <h1><%= post.title %></h1>
+    <p class="meta">Oleh <a href="/author/<%= post.author_username %>"><%= post.author_name %></a> &middot; <%= fmtDateTime(post.published_at) %> &middot; <%= post.views %> dibaca</p>
+    <% if (post.featured_image) { %><figure class="featured"><img src="/uploads/<%= post.featured_image %>" alt="<%= post.title %>"></figure><% } %>
+    <div class="entry"><%- filter('content', post.content, post) %></div>
+    <% if (tags.length) { %><div class="tags"><% tags.forEach(t => { %><a href="/tag/<%= t.slug %>">#<%= t.name %></a><% }) %></div><% } %>
+    <div class="share">Bagikan:
+      <a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(siteUrl + '/' + post.slug) %>">Facebook</a>
+      <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url=<%= encodeURIComponent(siteUrl + '/' + post.slug) %>&text=<%= encodeURIComponent(post.title) %>">X</a>
+      <a target="_blank" rel="noopener" href="https://wa.me/?text=<%= encodeURIComponent(post.title + ' ' + siteUrl + '/' + post.slug) %>">WhatsApp</a>
+    </div>
+    <% if (post.author_bio) { %><div class="author-box"><strong><%= post.author_name %></strong><p><%= post.author_bio %></p></div><% } %>
+
+    <% if (related.length) { %>
+    <h2 class="section-title">Berita Terkait</h2>
+    <div class="grid"><% related.forEach(p => { %><%- include('public/_card', { p, size: 'grid' }) %><% }) %></div>
+    <% } %>
+
+    <% if (post.allow_comments && settings.comments_enabled === '1') { %>
+    <section id="comments" class="comments">
+      <h2 class="section-title">Komentar (<%= comments.length %>)</h2>
+      <% comments.forEach(c => { %>
+        <div class="comment"><strong><%= c.author_name %></strong> <small><%= fmtDateTime(c.created_at) %></small>
+          <p><%= c.content %></p></div>
+      <% }) %>
+      <form method="post" action="/comment/<%= post.id %>" class="comment-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+        <div class="row"><input name="name" placeholder="Nama *" required maxlength="100"><input type="email" name="email" placeholder="Email * (tidak dipublikasikan)" required maxlength="150"></div>
+        <textarea name="content" rows="5" placeholder="Tulis komentar..." required maxlength="3000"></textarea>
+        <button class="btn">Kirim Komentar</button>
+      </form>
+    </section>
+    <% } %>
+  </article>
+  <%- include('public/_sidebar') %>
+</div>

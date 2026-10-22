@@ -1,0 +1,5 @@
+<% if (pages > 1) { %>
+<div class="pager">
+  <% for (let i = 1; i <= pages; i++) { %><a class="<%= i === page ? 'on' : '' %>" href="<%= pagerBase %>page=<%= i %>"><%= i %></a><% } %>
+</div>
+<% } %>

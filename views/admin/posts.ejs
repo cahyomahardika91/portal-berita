@@ -1,0 +1,42 @@
+<div class="head"><h1><%= label %></h1><a class="btn" href="<%= base %>/new">Tambah baru</a></div>
+<ul class="tabs">
+  <li><a class="<%= !status ? 'on' : '' %>" href="<%= base %>">Semua</a></li>
+  <% ['published','draft','pending','trash'].forEach(s => { const t = tabs.find(x => x.status === s); if (t) { %>
+    <li><a class="<%= status === s ? 'on' : '' %>" href="<%= base %>?status=<%= s %>"><%= s %> (<%= t.n %>)</a></li>
+  <% } }) %>
+</ul>
+<form class="filters" method="get">
+  <input type="hidden" name="status" value="<%= status %>">
+  <input name="s" placeholder="Cari judul..." value="<%= search %>">
+  <% if (type === 'post') { %><select name="cat"><option value="0">Semua kategori</option>
+    <% categories.forEach(c => { %><option value="<%= c.id %>" <%= cat === c.id ? 'selected' : '' %>><%= c.name %></option><% }) %></select><% } %>
+  <button class="btn">Filter</button>
+</form>
+<table class="list">
+  <thead><tr><th>Judul</th><% if (type === 'post') { %><th>Kategori</th><% } %><th>Penulis</th><th>Status</th><th>Tanggal</th><% if (type === 'post') { %><th>Dibaca</th><% } %></tr></thead>
+  <% rows.forEach(p => { const future = p.status === 'published' && new Date(p.published_at) > new Date(); %>
+  <tr>
+    <td><% if (canEdit(p)) { %><a href="<%= base %>/<%= p.id %>/edit"><b><%= p.title %></b></a><% } else { %><b><%= p.title %></b><% } %>
+      <% if (p.is_featured) { %> ★<% } %>
+      <div class="acts">
+        <% if (canEdit(p)) { %>
+          <a href="<%= base %>/<%= p.id %>/edit">Edit</a>
+          <% if (p.status === 'trash') { %>
+            <form method="post" action="<%= base %>/<%= p.id %>/restore"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link">Pulihkan</button></form>
+            <form method="post" action="<%= base %>/<%= p.id %>/delete" data-confirm="Hapus permanen?"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Hapus permanen</button></form>
+          <% } else { %>
+            <form method="post" action="<%= base %>/<%= p.id %>/trash"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link danger">Sampah</button></form>
+          <% } %>
+        <% } %>
+        <% if (p.status === 'published' && !future) { %><a href="/<%= p.slug %>" target="_blank">Lihat</a><% } else if (p.status !== 'trash') { %><a href="/<%= p.slug %>?preview=1" target="_blank">Pratinjau</a><% } %>
+      </div></td>
+    <% if (type === 'post') { %><td><%= p.cats || '—' %></td><% } %>
+    <td><%= p.author %></td>
+    <td><span class="badge <%= future ? 'scheduled' : p.status %>"><%= future ? 'terjadwal' : p.status %></span></td>
+    <td><%= fmtDateTime(p.published_at) %></td>
+    <% if (type === 'post') { %><td><%= p.views %></td><% } %>
+  </tr>
+  <% }) %>
+  <% if (!rows.length) { %><tr><td colspan="6">Tidak ada data.</td></tr><% } %>
+</table>
+<%- include('_pager') %>
