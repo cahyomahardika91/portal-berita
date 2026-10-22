@@ -1,6 +1,6 @@
 # CMS Berita (Node.js + Express + MySQL)
 
-CMS portal berita ala WordPress dengan tampilan referensi marketing.co.id.
+CMS portal berita sederhana ala WordPress.
 
 ## Menjalankan
 1. Pastikan MySQL/MariaDB aktif. Salin `.env.example` ke `.env` dan sesuaikan.
